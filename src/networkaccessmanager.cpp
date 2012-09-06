@@ -109,14 +109,17 @@ QVariantMap NetworkAccessManager::customHeaders() const
 
 void NetworkAccessManager::setCookies(const QVariantList &cookies)
 {
+    // TODO refacto or get rid of this
     CookieJar* cookiejar = static_cast<CookieJar*>(cookieJar());
-    cookiejar->setCookies(cookies);
+//    cookiejar->setCookies(cookies);
 }
 
 QVariantList NetworkAccessManager::cookies() const
 {
+    // TODO refacto or get rid of this
     CookieJar* cookiejar = static_cast<CookieJar*>(cookieJar());
-    return cookiejar->cookies();
+//    return cookiejar->cookies();
+    return QVariantList();
 }
 
 // protected:

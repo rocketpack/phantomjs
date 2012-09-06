@@ -30,20 +30,48 @@
 #ifndef COOKIEJAR_H
 #define COOKIEJAR_H
 
+#include <QSettings>
 #include <QNetworkCookieJar>
 
 class CookieJar: public QNetworkCookieJar
 {
-private:
-    QString m_cookiesFile;
+    Q_OBJECT
 
 public:
     CookieJar(QString cookiesFile);
+    virtual ~CookieJar();
 
-    bool setCookiesFromUrl(const QList<QNetworkCookie> & cookieList, const QUrl & url);
+    bool setCookiesFromUrl(const QList<QNetworkCookie> &cookieList, const QUrl & url);
     QList<QNetworkCookie> cookiesForUrl (const QUrl & url) const;
-    void setCookies(const QVariantList &cookies);
-    QVariantList cookies() const;
+
+    void addCookie(const QNetworkCookie &cookie, const QString &url = QString());
+    void addCookieFromMap(const QVariantMap &cookie, const QString &url = QString());
+    void addCookies(const QList<QNetworkCookie> &cookiesList, const QString &url = QString());
+    void addCookiesFromMap(const QVariantList &cookiesList, const QString &url = QString());
+
+    QList<QNetworkCookie> cookies(const QString &url = QString()) const;
+    QVariantList cookiesToMap(const QString &url = QString()) const;
+
+    QNetworkCookie cookie(const QString &name, const QString &url = QString()) const;
+    QVariantMap cookieToMap(const QString &name, const QString &url = QString()) const;
+
+    void deleteCookie(const QString &name, const QString &url = QString());
+    void deleteCookies(const QString &url = QString());
+    void clearCookies();
+
+    void enable();
+    void disable();
+    bool isEnabled() const;
+
+private slots:
+    void save();
+    void load();
+    bool purgeExpiredCookies();
+    bool purgeSessionCookies();
+
+private:
+    QSettings *m_cookieStorage;
+    bool m_enabled;
 };
 
 #endif // COOKIEJAR_H
